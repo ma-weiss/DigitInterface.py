@@ -36,7 +36,7 @@ async def run_sim(api):#
             print('time: ', obs['time'], end='\r')
 
         await api.close()
-
+        exit()
 
 
 def start(api, loop):
