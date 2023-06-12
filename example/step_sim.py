@@ -39,36 +39,24 @@ async def run_sim(api):#
 
 
 
-async def goto(api):
-    target = msgs.ActionGoto(
-            target=msgs.GpsPose(
-                xy=[5.0, 0.0],
-            )
-
-        )
-    
-    await api.send(target)
-
-
 def start(api, loop):
     """
     Starts the action server
     and keeps it alive.
     """
-    loop.run_until_complete(start_api(api))
+    loop.run_until_complete(start_api(api, loop))
 
-async def start_api(api):
+async def start_api(api, loop):
     """
     Connects to the digit and
     keeps the connection alive.
     """
     await api.connect()
-    request = msgs.RequestPrivilege()
-    await api.send(request)
+    await api.request_privilege("change-action-command")
     print('Connected to the Digit')
-    # await self.api.request_privilege("change-action-command")
     asyncio.ensure_future(run_sim(api))
-    asyncio.ensure_future(goto(api))
+    
+
     while True:
         await asyncio.sleep(0.5)  # this keeps the connection alive
     return
@@ -82,7 +70,6 @@ def main():
     loop = asyncio.get_event_loop()
     api = agility.JsonApi()
     start(api, loop)
-    run_sim(api)
 
 if __name__ == "__main__":
     main()
