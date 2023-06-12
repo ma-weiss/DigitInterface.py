@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2021 Daniel Laidig <laidig@control.tu-berlin.de>
+#
+# SPDX-License-Identifier: MIT
+
+"""
+As an additional option for cases in which installing the package using pip is not possible, this file *might* make
+it possible to compile and import the C++ version on the fly.
+
+    sys.path.append('path/to/digit_interface/')
+    import pyximport
+    pyximport.install()
+    from digit_interface import DigitLLApi
+"""
+
+from pathlib import Path
+import numpy as np
+
+
+def make_ext(modname, pyxfilename):
+    from distutils.extension import Extension
+
+    p = Path(__file__).resolve().parent
+    return Extension(
+        name=modname,
+        sources=[pyxfilename, 'cpp/low_level_connection_class.cpp', 
+            'cpp/lowlevelapi.c',
+            'cpp/libartl/artl.c',
+            ],
+        include_dirs=[str(p),  "cpp/include", np.get_include()],
+        language="c++",
+        # extra_compile_args=["-O0", "-pipe", "-v"],
+        
+    )

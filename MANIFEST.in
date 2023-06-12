@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2021 Manuel Weiss <manuel.Weiss@bht-berlin.de>
+#
+# SPDX-License-Identifier: MIT
+
+include digit_interface/*.py
+include digit_interface/*.pyx
+include digit_interface/*.pyxbld
+include digit_interface/cpp/*.cpp
+include digit_interface/cpp/*.hpp
+include digit_interface/cpp/*.h
+include digit_interface/cpp/*.c
+include digit_interface/cpp/libartl/*.c
+include digit_interface/cpp/libartl/*.h
+include digit_interface/cpp/CMakeLists.txt
+
