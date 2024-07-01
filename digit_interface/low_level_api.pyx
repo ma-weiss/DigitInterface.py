@@ -77,6 +77,7 @@ cdef extern from 'cpp/low_level_connection_class.hpp':
         C_LLAPI(const char*) except +
 
         llapi_observation_python_t step (llapi_command_t command)
+        llapi_observation_python_t get_observation ()
 
 
 
@@ -86,11 +87,16 @@ cdef class DigitLLApi:
     cdef public llapi_observation_python_t observation
     cdef public llapi_command_t command
 
-    def __cinit__(self):
-        self.c_obj = new C_LLAPI("127.0.0.1")
+    def __cinit__(self, ip="127.0.0.1"):
+        ip_c = ip.encode('utf-8')
+        print(ip)
+        self.c_obj = new C_LLAPI(ip.encode('utf-8'))
 
-    def __init__(self):
+    def __init__(self, ip="127.0.0.1"):
+        # self.__cinit__(ip)
         self.observation = llapi_observation_python_t()
+        
+        
         self.command = llapi_command_t()
         self.command.fallback_opmode = 0
         self.command.apply_command = False
@@ -98,12 +104,15 @@ cdef class DigitLLApi:
             self.command.motors[i].torque = 0.0
             self.command.motors[i].velocity = 0.0
             self.command.motors[i].damping = 0.0
+        
+
 
 
     def step(self, np.ndarray[double, ndim=1] torque=np.zeros(20),  np.ndarray[double, ndim=1] velocity=np.zeros(20),  np.ndarray[double, ndim=1] damping=np.zeros(20), fallback_opmode=0, apply_command=False):
 
         self.set_command(torque, velocity, damping, fallback_opmode, apply_command)
         observation = self.c_obj.step(self.command)
+        self.observation = observation
         return observation
 
     def set_command(self, np.ndarray[double, ndim=1] torque,  np.ndarray[double, ndim=1] velocity,  np.ndarray[double, ndim=1] damping, fallback_opmode=0, apply_command=True):
@@ -117,6 +126,10 @@ cdef class DigitLLApi:
             self.command.motors[i].damping = damping[i]
         self.command.fallback_opmode = 0
         self.command.apply_command = True
+
+    # def get_observation():
+    #     observation = self.c_obj.get_observation()
+    #     return observation
 
     def __dealloc__(self):
         del self.c_obj

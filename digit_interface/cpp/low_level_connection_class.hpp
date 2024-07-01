@@ -68,9 +68,12 @@ class low_level_connection_class {
    llapi_observation_python_t observation_python;
    const llapi_limits_t* limits;
 
+   void convert_to_python_observation();
+
   public:
    low_level_connection_class(const char* publisher_address);
 
    ~low_level_connection_class();
    llapi_observation_python_t step(llapi_command_t command);
+   llapi_observation_python_t get_observation();
 };

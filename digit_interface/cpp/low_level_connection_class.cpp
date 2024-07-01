@@ -26,7 +26,26 @@ llapi_observation_python_t low_level_connection_class::step(
    } else {
       // No new data
    }
-   this->observation_python.time = this->observation.time;
+   convert_to_python_observation();
+
+   llapi_send_command(&command);
+   if (!llapi_connected()) {
+      // Handle error case. You don't need to re-initialize subscriber
+      // Calling llapi_send_command will keep low level api open
+   }
+   this->command = command;
+   return this->observation_python;
+}
+
+
+llapi_observation_python_t low_level_connection_class::get_observation()
+{
+    return this->observation_python;
+}
+
+void low_level_connection_class::convert_to_python_observation()
+{
+    this->observation_python.time = this->observation.time;
    this->observation_python.error = this->observation.error;
 
    this->observation_python.base.orientation.w =
@@ -81,13 +100,9 @@ llapi_observation_python_t low_level_connection_class::step(
    // this->observation_python.motor = this->observation.motor;
    // this->observation_python.joint = this->observation.joint;
    this->observation_python.battery_charge = this->observation.battery_charge;
-   llapi_send_command(&command);
-   if (!llapi_connected()) {
-      // Handle error case. You don't need to re-initialize subscriber
-      // Calling llapi_send_command will keep low level api open
-   }
-   this->command = command;
-   return this->observation_python;
+
 }
+
+
 
 low_level_connection_class::~low_level_connection_class() {}
