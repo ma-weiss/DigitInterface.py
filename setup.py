@@ -30,7 +30,7 @@ ext_modules = cythonize(
             "digit_interface/low_level_api.pyx",
         ],
         libraries = ["digit_interface/cpp/libartl/libartl.a",],
-        extra_compile_args=["-O0", "-pipe", "-v"],
+        extra_compile_args=["-O3", "-pipe", "-v"],
         language="c++",
         extra_objects=["digit_interface/cpp/libartl/libartl.a"],
     ),
