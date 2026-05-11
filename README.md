@@ -1,19 +1,40 @@
-# DigitInterface.py
+# Digit Python Interface - Low-Level API Cython Wrapper
 
+A lightweight Cython wrapper enabling Python integration for the Agility Digit Low-Level API.
 
-to run the make command for the agility lib if you are not on linux. please check the location of the lib afterwards. 
+## Installation
 
-``` shell
- python3 setup.py sdist
-```
+1. Create a virtual environment (optional but recommended):
 
-to install the digit_interface package
+    ```bash
+    python3 -m venv .venv
+    source venv/bin/activate
+    ```
 
-``` shell
-python3 setup.py develop --user
-```
-or 
-``` shell
-pip3 install -e .
-```
+1. Install the Agility Python SDK ([available through your ar-control simulator](http://localhost:8080/doc/software/jsonapi.html#python-sdk))
 
+    ```bash
+    pip install agility-1.1.4-py3-none-any.whl
+    ```
+
+1. Build the underlying C++ library (`libartl`):
+
+    *Note: The `setup.py` uses a custom `sdist` command to trigger the Makefile for the agility lib. If you are not on Linux, please verify the location of the compiled library afterwards.*
+
+    ```bash
+    python3 setup.py sdist
+    ```
+
+    *(Alternatively, you can run the make command directly: `make -C digit_interface/cpp/libartl libartl.a`)*
+
+1. Build and install the Digit Interface package:
+
+    ```bash
+    pip install -e .
+    ```
+
+    *Development Note: If you make changes to the `.pyx` files and need to manually recompile the Cython extensions in-place without reinstalling the whole package, you can run:*
+
+    ```bash
+    python3 setup.py build_ext --inplace
+    ```
