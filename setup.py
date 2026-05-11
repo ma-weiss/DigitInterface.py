@@ -24,33 +24,35 @@ site.ENABLE_USER_SITE = "--user" in sys.argv[1:]
 
 
 ext_modules = cythonize(
-    [Extension(
-        "digit_interface.low_level_api",
-        sources=[
-            "digit_interface/low_level_api.pyx",
-        ],
-        libraries = ["digit_interface/cpp/libartl/libartl.a",],
-        extra_compile_args=["-O3", "-pipe", "-v"],
-        language="c++",
-        extra_objects=["digit_interface/cpp/libartl/libartl.a"],
-    ),
+    [
+        Extension(
+            "digit_interface.low_level_api",
+            sources=[
+                "digit_interface/low_level_api.pyx",
+            ],
+            libraries=[
+                "digit_interface/cpp/libartl/libartl.a",
+            ],
+            extra_compile_args=["-O3", "-pipe", "-v"],
+            language="c++",
+            extra_objects=["digit_interface/cpp/libartl/libartl.a"],
+        ),
     ]
 )
 # if sys.platform == "linux":
 #     ext_modules[0].extra_compile_args += ["-std=c++17"]
 #     ext_modules[0].extra_link_args += ["-std=c++17"]
 
+
 class make_libartl(sdist):
     def run(self):
         print("Running custom sdist command to build libartl")
         try:
-            self.spawn(["make", "digit_interface/cpp/libartl"]) 
-            self.spawn(["-C libartl libartl.a", "digit_interface/cpp/"])
+            self.spawn(["make", "-C", "digit_interface/cpp/libartl", "libartl.a"])
         except DistutilsExecError:
-            self.warn("Failed to run cmake")
+            self.warn("Failed to run make for libartl")
         # run the default build_ext command
         sdist.run(self)
-
 
 
 for m in ext_modules:
@@ -75,7 +77,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
-    
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     cmdclass={"sdist": make_libartl},
     package_data={
@@ -103,5 +104,5 @@ setup(
     ext_modules=ext_modules,
     include_dirs=[
         np.get_include(),
-    ]
+    ],
 )
