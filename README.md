@@ -4,11 +4,19 @@ A lightweight Cython wrapper enabling Python integration for the Agility Digit L
 
 ## Installation
 
+1. Install the ar-control simulator prerequisites:
+
+    ```bash
+    sudo apt update
+    sudo apt install libfuse2
+    ```
+
 1. Create a virtual environment (optional but recommended):
 
     ```bash
     python3 -m venv .venv
     source venv/bin/activate
+    python -m pip install --upgrade pip
     ```
 
 1. Install the Agility Python SDK ([available through your ar-control simulator](http://localhost:8080/doc/software/jsonapi.html#python-sdk))
@@ -16,16 +24,6 @@ A lightweight Cython wrapper enabling Python integration for the Agility Digit L
     ```bash
     pip install agility-1.1.4-py3-none-any.whl
     ```
-
-1. Build the underlying C++ library (`libartl`):
-
-    *Note: The `setup.py` uses a custom `sdist` command to trigger the Makefile for the agility lib. If you are not on Linux, please verify the location of the compiled library afterwards.*
-
-    ```bash
-    python3 setup.py sdist
-    ```
-
-    *(Alternatively, you can run the make command directly: `make -C digit_interface/cpp/libartl libartl.a`)*
 
 1. Build and install the Digit Interface package:
 
@@ -38,3 +36,13 @@ A lightweight Cython wrapper enabling Python integration for the Agility Digit L
     ```bash
     python3 setup.py build_ext --inplace
     ```
+
+1. Build the underlying C++ library (`libartl`):
+
+    *Note: The `setup.py` uses a custom `sdist` command to trigger the Makefile for the agility lib. If you are not on Linux, please verify the location of the compiled library afterwards.*
+
+    ```bash
+    python3 setup.py sdist
+    ```
+
+    *(Alternatively, you can run the make command directly: `make -C digit_interface/cpp/libartl libartl.a`)*
